@@ -37,6 +37,48 @@ pub struct Message2<'a> {
     pub segments: Vec<Segment2<'a>>,
 }
 
+impl<'a> Repeat2<'a> {
+    /// Returns all components for this repeat as a single string.  If multiple components are present they are joined
+    /// with the standard HL7 '^' separator.
+    pub fn get_as_string(&'a self) -> String {
+        if self.components.len() == 0 {
+            return "".to_string();
+        } else {
+            self.components.join("^") //TODO: How to convert char to &str in a sane way so we can use the Seperators?
+        }
+    }
+}
+
+impl<'a> Field2<'a> {
+    pub fn get_all_as_string(&'a self) -> String {
+        if self.repeats.len() == 0 {
+            return "".to_string();
+        }
+
+        self.repeats.iter().map(|r| r.get_as_string()).join("~")
+    }
+}
+
+impl<'a> Message2<'a> {
+    pub fn get_segments(&'a self, segment_type: &str) -> Vec<&'a Segment2> {
+        self.segments
+            .iter()
+            .filter(|segment| {
+                let seg_type = segment.fields[0].get_all_as_string();
+                println!("Checking Segment: '{}'", seg_type);
+                seg_type == segment_type
+            })
+            .collect()
+    }
+
+    pub fn get_field(&'a self, segment_type: &str, field_index: usize) -> String {
+        let matching_segments = self.get_segments(segment_type);
+        let segment = matching_segments[0];
+        let result = segment.fields[field_index].get_all_as_string();
+        result
+    }
+}
+
 impl ForwardsMessageParser {
     /// Parses an entire HL7 message into it's component values
     pub fn parse_message<'a>(&mut self, input: &'a String) -> Message2<'a> {
@@ -54,7 +96,6 @@ impl ForwardsMessageParser {
             if c == delims.repeat {
                 repeat_start_index =
                     self.finish_repeat(repeat_start_index, i, &input, &mut repeats);
-                assert_eq!(repeat_start_index, 0);
             } else if c == delims.field {
                 // first, finish off any in-flight repeat values
                 repeat_start_index =
@@ -107,9 +148,13 @@ impl ForwardsMessageParser {
     }
 
     fn finish_segment<'a>(fields: &mut Vec<Field2<'a>>) -> Segment2<'a> {
-        Segment2 {
+        let s = Segment2 {
             fields: fields.to_owned(),
-        } // take ownership and store it in the segment
+        }; // take ownership and store it in the segment
+
+        fields.clear();
+
+        s
     }
 }
 #[cfg(test)]
