@@ -33,8 +33,8 @@ pub struct Segment2<'a> {
 /// It consists of (1 or more) Segments.
 #[derive(Debug, PartialEq)]
 #[repr(C)]
-pub struct Message2<'a> {
-    pub segments: Vec<Segment2<'a>>,
+pub struct Message2 {
+    pub input: String,
 }
 
 impl<'a> Repeat2<'a> {
@@ -59,29 +59,35 @@ impl<'a> Field2<'a> {
     }
 }
 
-impl<'a> Message2<'a> {
-    pub fn get_segments(&'a self, segment_type: &str) -> Vec<&'a Segment2> {
-        self.segments
-            .iter()
-            .filter(|segment| {
-                let seg_type = segment.fields[0].get_all_as_string();
-                println!("Checking Segment: '{}'", seg_type);
-                seg_type == segment_type
-            })
-            .collect()
-    }
+impl Message2 {
+    pub fn get_field(&self, segment_type: &str, field_index: usize) -> String {
+        let delims = Seperators::default();
 
-    pub fn get_field(&'a self, segment_type: &str, field_index: usize) -> String {
-        let matching_segments = self.get_segments(segment_type);
+        let segment = self
+            .input
+            .split(delims.segment)
+            .filter(|line| line[..3] == *segment_type)
+            .next();
+
+        match segment {
+            None => "".to_string(), // TODO: Throw error no segment found
+            Some(line) => line
+                .split(delims.field)
+                .nth(field_index)
+                .unwrap()
+                .to_string(),
+        }
+
+        /*let matching_segments = self.get_segments(segment_type);
         let segment = matching_segments[0];
         let result = segment.fields[field_index].get_all_as_string();
-        result
+        result*/
     }
 }
 
-impl ForwardsMessageParser {
+/*impl ForwardsMessageParser {
     /// Parses an entire HL7 message into it's component values
-    pub fn parse_message<'a>(&mut self, input: &'a String) -> Message2<'a> {
+    pub fn parse_message(&mut self, input: &String) -> Message2 {
         let mut result = Message2 {
             segments: Vec::new(),
         };
@@ -156,25 +162,4 @@ impl ForwardsMessageParser {
 
         s
     }
-}
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn basic_parse() {
-        let pid = "PID|||555-44-4444||EVERYWOMAN^EVE^E^^^^L|JONES|19620320|F|||153 FERNWOOD DR.^^STATESVILLE^OH^35292||(206)3345232|(206)752-121||||AC555444444||67-A4335^OH^20030520\r".to_string();
-        let mut parser = ForwardsMessageParser {};
-        let m = parser.parse_message(&pid);
-
-        assert_eq!(m.segments.len(), 1);
-        assert_eq!(m.segments[0].fields.len(), 21);
-        assert_eq!(
-            m.segments[0].fields[3].repeats[0].components[0],
-            "555-44-4444"
-        );
-
-        println!("{:?}", m);
-    }
-
-}
+}*/
