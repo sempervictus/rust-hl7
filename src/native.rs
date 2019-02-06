@@ -74,3 +74,36 @@ pub extern "C" fn get_field(
     let c_string = CString::new(result).unwrap();
     c_string.into_raw()
 }
+
+#[no_mangle]
+pub extern "C" fn get_field_from_message(
+    message: *const c_char,
+    segment_ptr: *const c_char,
+    field_index: usize,
+) -> *mut c_char {
+    let message_cstr = unsafe {
+        assert!(!message.is_null());
+        CStr::from_ptr(message)
+    };
+
+    let segment_cstr = unsafe {
+        assert!(!segment_ptr.is_null());
+        CStr::from_ptr(segment_ptr)
+    };
+
+    let message_string = message_cstr.to_str().unwrap();
+    let segment_str = segment_cstr.to_str().unwrap();
+
+    let obj = forwards_parser::Message2 {
+        input: message_string.to_string(),
+    };
+
+    let result = obj.get_field(segment_str, field_index);
+    // println!(
+    //     "Returning field value: {} from new super dooper method!",
+    //     result
+    // );
+
+    let c_string = CString::new(result).unwrap();
+    c_string.into_raw()
+}

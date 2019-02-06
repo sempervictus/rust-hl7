@@ -111,5 +111,22 @@ namespace ConsoleApp1
             }
 
         }
+
+
+        [Benchmark]
+        public void Net_retrieve_field_no_parse()
+        {
+            var fieldValue = TimsSimpleParser.GetFieldFromMessage(ORU_TEXT, "OBR", 7);
+        }
+
+        [Benchmark]
+        public void Rust_retrieve_field_no_parse()
+        {
+
+            using (var fieldValue = Native.GetFieldFromMessage(ORU_TEXT, "OBR", 7))
+            {
+                var fieldValueAsString = fieldValue.AsString();
+            } //dispose of string handle, freeing up string memeory on the rust side.
+        }
     }
 }

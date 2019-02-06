@@ -17,7 +17,8 @@ namespace ConsoleApp1
         [DllImport("rusthl7", CallingConvention = CallingConvention.Cdecl, EntryPoint = "get_field")]
         internal static extern StringHandle GetField(IntPtr ptrToMessage, string segmentName, int fieldIndex);
 
-
+        [DllImport("rusthl7", CallingConvention = CallingConvention.Cdecl, EntryPoint = "get_field_from_message")]
+        internal static extern StringHandle GetFieldFromMessage(string message, string segmentName, int fieldIndex);
 
 
     }

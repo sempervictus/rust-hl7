@@ -11,6 +11,20 @@ namespace ConsoleApp1
     public class TimsSimpleParser
     {
 
+
+        public static String GetFieldFromMessage(string message, string segmentType, int fieldIndex)
+        {
+            var delims = new Seperators();
+
+            return message.Split(delims.Segment)
+            .Where(line => line.StartsWith(segmentType))
+            .First()
+            .Split(delims.Field)
+            [fieldIndex];
+
+        }
+
+
         private class Seperators
         {
             /// constant value, spec fixed to '\r' (ASCII 13, 0x0D)
