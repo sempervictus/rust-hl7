@@ -9,9 +9,18 @@ fn main() {
 
     //let sw = Stopwatch::start_new();
 
+    // let mut parser = forwards_parser::ForwardsMessageParser::new();
+    // let msg = parser.parse_message(get_sample_message());
+    // let field = msg.get_field("OBR", 7);
+    // println!("{:?}", field);
+
     for _ in 0..100_000 {
-        let msg = message_parser::MessageParser::parse_message(get_sample_message());
-        let _field = msg.get_field("OBR", 7);
+        let mut parser = forwards_parser::ForwardsMessageParser::new();
+        let msg = parser.parse_message(get_sample_message());
+        let field = msg.get_field("OBR", 7);
+
+        /*let msg = message_parser::MessageParser::parse_message(get_sample_message());
+        let _field = msg.get_field("OBR", 7);*/
     }
 
     /*    let mut msg = message_parser::MessageParser::parse_message(get_simple_message());

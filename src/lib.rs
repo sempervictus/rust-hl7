@@ -6,6 +6,7 @@ extern crate libc;
 extern crate test;
 
 mod field_parser;
+pub mod forwards_parser;
 pub mod message_parser;
 pub mod native;
 mod segment_parser;
@@ -60,7 +61,7 @@ impl Seperators {
 /// A repeat of a field is a set of 0 or more sub component values.
 /// Currently all values are stored as their original string representations.  Methods to convert
 /// the values to their HL7-spec types is outside the scope of the parser.
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 #[repr(C)]
 pub struct Repeat {
     pub components: Vec<String>,
@@ -68,7 +69,7 @@ pub struct Repeat {
 
 /// A Field is a single 'value between the pipes'.
 /// It consists of (0 or more) repeats.
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 #[repr(C)]
 pub struct Field {
     pub repeats: Vec<Repeat>,
@@ -127,6 +128,13 @@ impl Message {
     pub fn new(input: String) -> Message {
         Message {
             input: input,
+            segments: Vec::new(),
+        }
+    }
+
+    pub fn empty() -> Message {
+        Message {
+            input: "".to_string(),
             segments: Vec::new(),
         }
     }
