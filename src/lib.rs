@@ -83,12 +83,10 @@ pub struct Segment {
 }
 
 /// A Message is an entire HL7 message parsed into it's consitituent segments, fields, repeats and subcomponents
-/// It consists of (1 or more) Segments.
+/// It consists of (1 or more) [`Segment`]s.
 #[derive(Debug, PartialEq)]
 #[repr(C)]
 pub struct Message {
-    /// The source string that was parsed to form this message.
-    /// We need our own copy to ensure the &str's are referencing a string that lives long enough in an FFI scenario
     input: String,
     pub segments: Vec<Segment>,
 }

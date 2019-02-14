@@ -16,15 +16,13 @@ fn main() {
     // let field = msg.get_field("OBR", 7);
     // println!("{:?}", field);
 
-    for _ in 0..100_000 {
+    for _ in 0..10_000_000 {
         //let mut parser = forwards_parser::ForwardsMessageParser {};
         let msg = forwards_parser::Message2 {
             input: get_sample_message(),
-        }; // parser.parse_message(input);
-        let _field = msg.get_field("OBR", 7);
-
-        /*let msg = message_parser::MessageParser::parse_message(get_sample_message());
-        let _field = msg.get_field("OBR", 7);*/
+        };
+        let field = msg.get_field("OBR", 7);
+        //println!("{}", field);
     }
 
     /*    let mut msg = message_parser::MessageParser::parse_message(get_simple_message());
@@ -40,8 +38,4 @@ fn main() {
 
 fn get_sample_message() -> String {
     "MSH|^~\\&|GHH LAB|ELAB-3|GHH OE|BLDG4|200202150930||ORU^R01|CNTRL-3456|P|2.4\rPID|||555-44-4444||EVERYWOMAN^EVE^E^^^^L|JONES|19620320|F|||153 FERNWOOD DR.^^STATESVILLE^OH^35292||(206)3345232|(206)752-121||||AC555444444||67-A4335^OH^20030520\rOBR|1|845439^GHH OE|1045813^GHH LAB|15545^GLUCOSE|||200202150730|||||||||555-55-5555^PRIMARY^PATRICIA P^^^^MD^^|||||||||F||||||444-44-4444^HIPPOCRATES^HOWARD H^^^^MD\rOBX|1|SN|1554-5^GLUCOSE^POST 12H CFST:MCNC:PT:SER/PLAS:QN||^182|mg/dl|70_105|H|||F\r".to_string()
-}
-
-fn get_simple_message() -> &'static str {
-    "MSH|^~\\&|CATH|StJohn|AcmeHIS|StJohn|20061019172719||ACK^O01|MSGID12349876|P|2.3\rMSA|AA|MSGID12349876"
 }

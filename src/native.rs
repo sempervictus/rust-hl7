@@ -15,7 +15,7 @@ pub extern "C" fn free_string(s: *mut c_char) {
     };
 }
 
-/// Accepts a ptr originaly returned from a call to [`build_message`] and frees the memory associated with the underlying object.
+/// Accepts a ptr originally returned from a call to [`build_message`] and frees the memory associated with the underlying object.
 #[no_mangle]
 pub extern "C" fn free_message(msg_ptr: *mut Message) {
     unsafe {
@@ -51,6 +51,9 @@ pub extern "C" fn build_message(s: *const c_char) -> *mut Message {
     return_ptr
 }
 
+///! Retrieves the value of a single field from a pre-parsed message. The memory associated with the return value **MUST** be cleaned up with a call to [`free_string`]
+///! Note that if only a small number of field values are required it may be faster to call [`get_field_from_message`] than to pre-parse with [`build_message`] and then call this method.
+///! Performance will vary, but you can often call this method 20 times or more before it becomes faster to pre-parse with [`build_message`].
 #[no_mangle]
 pub extern "C" fn get_field(
     ptr: *const Message,

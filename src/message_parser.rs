@@ -1,6 +1,6 @@
 //! This module parses a whole pipe-delimited style HL7 V2 message.  It is expected that only a single message is passed at a time.
 //! Note that this parses to constituent values, but makes no effort to intepret those values (ie no strong-typing of segments etc)
-//! or to interpret the values (coercian to numeric values etc).  Utility API's [are being added](Field::get_as_string) to better handle these fields
+//! or to interpret the values (coercian to numeric values etc).  Utility API's [`Field::get_as_string`] are being added to better handle these fields
 pub struct MessageParser;
 
 use super::*;
