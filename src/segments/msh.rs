@@ -98,6 +98,103 @@ impl<'a> Clone for MshSegment<'a> {
     }
 }
 
+use std::ops::Index;
+impl<'a> Index<usize> for MshSegment<'a> {
+    type Output = &'a str;
+    /// Access Field as string reference
+    fn index(&self, fidx: usize) -> &Self::Output {
+        match fidx {
+            1  => {
+                // let idx: usize = self.source.find(self.msh_1_field_separator).unwrap();
+                // &&(self.source[idx..idx])
+                &"" //TODO - chars as &'a str?
+            },
+            2  => {
+                //self.msh_2_encoding_characters,
+                &"" //TODO - chars as &'a str?
+            },
+            3  => {
+                match &self.msh_3_sending_application {
+                    Some(x) => &x.source,
+                    None => &""
+                }
+            },
+            4  => {
+                match &self.msh_4_sending_facility {
+                    Some(x) => &x.source,
+                    None => &""
+                }
+            },
+            5  => {
+                match &self.msh_5_receiving_application {
+                    Some(x) => &x.source,
+                    None => &""
+                }
+            },
+            6  => {
+                match &self.msh_6_receiving_facility {
+                    Some(x) => &x.source,
+                    None => &""
+                }
+            },
+            7  => &self.msh_7_date_time_of_message.source,
+            8  => {
+                match &self.msh_8_security {
+                    Some(x) => &x.source,
+                    None => &""
+                }
+            },
+            9  => &self.msh_9_message_type.source,
+            10 => &self.msh_10_message_control_id.source,
+            11 => &self.msh_11_processing_id.source,
+            12 => &self.msh_12_version_id.source,
+            13 => {
+                match &self.msh_13_sequence_number {
+                    Some(x) => &x.source,
+                    None => &""
+                }
+            },
+            14 => {
+                match &self.msh_14_continuation_pointer {
+                    Some(x) => &x.source,
+                    None => &""
+                }
+            },
+            15 => {
+                match &self.msh_15_accept_acknowledgment_type {
+                    Some(x) => &x.source,
+                    None => &""
+                }
+            },
+            16 => {
+                match &self.msh_16_application_acknowledgment_type {
+                    Some(x) => &x.source,
+                    None => &""
+                }
+            },
+            17 => {
+                match &self.msh_17_country_code {
+                    Some(x) => &x.source,
+                    None => &""
+                }
+            },
+            18 => {
+                match &self.msh_18_character_set {
+                    Some(x) => &x.source,
+                    None => &""
+                }
+            },
+            19 => {
+                match &self.msh_19_principal_language_of_message {
+                    Some(x) => &x.source,
+                    None => &""
+                }
+            },
+            _ => &""
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

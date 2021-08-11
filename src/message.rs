@@ -148,8 +148,14 @@ impl<'a> Index<String> for Message<'a> {
         let seg = &self.segments[seg_index.unwrap()];
         // Return the appropriate source reference
         match seg {
-            // Short circuit for now
-            Segment::MSH(m) => &m.source,
+            Segment::MSH(m) => match indices.len() {
+               1 => &m.source,
+               2 => {
+                   let idx: usize = indices[1][1..].parse().unwrap();
+                   &m[idx]
+               },
+               _ => &"" // TODO: implement field indexing
+            }
             // Parse out slice depth
             Segment::Generic(g) => if indices.len() < 2 {
                 &g.source
